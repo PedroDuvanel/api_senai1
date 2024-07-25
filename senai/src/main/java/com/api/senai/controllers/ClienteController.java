@@ -1,5 +1,7 @@
 package com.api.senai.controllers;
 
+import com.google.gson.Gson;
+
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -12,9 +14,10 @@ import com.api.senai.classes.Cliente;
 public class ClienteController {
 
     @GetMapping
-    public String getAllClientes() {
+    public String getAllClientes(Cliente cliente) {
         if (!Cliente.clientes.isEmpty()) {
-            return Cliente.clientes.toString();
+            Gson gson = new Gson();
+            return gson.toJson(Cliente.clientes);
         } else {
             return "Não há clientes cadastrados.";
         }
@@ -23,7 +26,8 @@ public class ClienteController {
     @PostMapping    
     public String addCliente(@RequestBody Cliente cliente) {
         Cliente.clientes.add(cliente);
-        return "Cliente adicionado com sucesso!";
+        Gson gson = new Gson();
+         return gson.toJson(cliente);
     }
 
     @PutMapping("{id}")
@@ -35,7 +39,8 @@ public class ClienteController {
                 cliente.setCpf(clienteAtualizado.getCpf());
                 cliente.setDataNascimento(clienteAtualizado.getDataNascimento());
                 cliente.setTelefone(clienteAtualizado.getTelefone());
-                return "Cliente atualizado com sucesso!";
+                Gson gson = new Gson();
+                return gson.toJson(cliente);
             }
         }
         return "Cliente não encontrado...";
@@ -48,7 +53,8 @@ public class ClienteController {
             Cliente cliente = iterator.next();
             if (cliente.getId().equals(id)) {
                 iterator.remove(); 
-                return "Cliente deletado com sucesso!";
+                Gson gson = new Gson();
+                return gson.toJson(cliente);
             }
         }
         return "Cliente não encontrado...";
@@ -58,7 +64,8 @@ public class ClienteController {
     public String getbyId(@PathVariable UUID id) {
         for (Cliente cliente : Cliente.clientes) {
             if (cliente.getId().equals(id)) {
-                return cliente.toString();
+                Gson gson = new Gson();
+                return gson.toJson(cliente);
             }
         }
         return "Cliente não encontrado...";
